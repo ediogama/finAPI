@@ -24,10 +24,10 @@ function verifyIfAlreadyExistsCPF(request, response, next) {
 
 function getBalance(statement) {
     const balance = statement.reduce((acc, operation) => {
-        if(statement.type === 'credit'){
-            return acc + operation.amount
-        } else if(statement.type === 'debit'){
-            return acc - operation.amount
+        if(operation.type === 'credit'){
+            return acc + operation.amount;
+        } else if(operation.type === 'debit'){
+            return acc - operation.amount;
         }
     }, 0);
 
@@ -123,6 +123,22 @@ app.get('/account', verifyIfAlreadyExistsCPF, (request, response) => {
     const { customer } = request;
 
     return response.status(201).json(customer)
+})
+
+app.delete('/account',  verifyIfAlreadyExistsCPF, (request, response) => {
+    const { customer } = request;
+
+    customers.splice(customer, 1);
+
+    return response.status(200).json(customers);
+})
+
+app.get('/balance', verifyIfAlreadyExistsCPF, (request, response) => {
+    const { customer } = request;
+
+    const balance = getBalance(customer.statement);
+
+    return response.json(balance);
 })
 
 app.listen(3333)
