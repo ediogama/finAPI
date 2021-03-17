@@ -110,4 +110,19 @@ app.get('/statement/date',  verifyIfAlreadyExistsCPF,(request, response) => {
     return response.json(customer.statement);
 })
 
+app.put('/account',  verifyIfAlreadyExistsCPF,(request, response) => {
+    const { customer } = request;
+    const { name } = request.body;
+
+    customer.name = name;
+
+    return response.status(201).send();
+})
+
+app.get('/account', verifyIfAlreadyExistsCPF, (request, response) => {
+    const { customer } = request;
+
+    return response.status(201).json(customer)
+})
+
 app.listen(3333)
