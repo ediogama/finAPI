@@ -4,12 +4,12 @@ const app = express();
 
 app.use(express.json());
 
-const custumers = [];
+const customers = [];
 
 app.post("/account", (request, response) => {
     const { name, cpf } = request.body;
 
-    const customerAlreadyExists = custumers.some(
+    const customerAlreadyExists = customers.some(
         custumer => custumer.cpf === cpf
     );
 
@@ -17,7 +17,7 @@ app.post("/account", (request, response) => {
         return response.status(400).json({ error: "Customer already exists!" });
     }
 
-    custumers.push({
+    customers.push({
         id: uuidV4(),
         name,
         cpf,
@@ -25,6 +25,14 @@ app.post("/account", (request, response) => {
     });
 
     return response.status(201).send();
+});
+
+app.get("/statement/:cpf", (request, response) => {
+    const { cpf } = request.params;
+
+    const customer = customers.find(customer => customer.cpf === cpf);
+
+    return response.json(customer.statement);
 });
 
 app.listen(3333, console.log("Server is live..."))
